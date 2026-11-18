@@ -1,4 +1,6 @@
-export default async function DynamicPage({ params, searchParams }) {
+import { Suspense } from "react";
+
+async function DestinationContent({ params, searchParams }) {
   const { slug } = await params;
   const query = await searchParams;
 
@@ -21,5 +23,24 @@ export default async function DynamicPage({ params, searchParams }) {
 
       <pre>{JSON.stringify(query, null, 2)}</pre>
     </main>
+  );
+}
+
+export default function DynamicPage({ params, searchParams }) {
+  return (
+    <Suspense
+      fallback={
+        <main
+          style={{
+            padding: "50px",
+            fontFamily: "Arial",
+          }}
+        >
+          <p>Loading destination...</p>
+        </main>
+      }
+    >
+      <DestinationContent params={params} searchParams={searchParams} />
+    </Suspense>
   );
 }
